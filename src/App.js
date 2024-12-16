@@ -160,22 +160,29 @@ function TMDBMovieUploader() {
         </>
       )}
 
-      <Modal visible={!!selectedMovie} onCancel={handleCloseModal} footer={null}>
-        {selectedMovie && (
-          <>
-            <img src={selectedMovie.poster} alt={selectedMovie.title} className="movie-poster" />
-            <Title level={4}>{selectedMovie.title}</Title>
-            <p><strong>TMDB ID:</strong> {selectedMovie.id}</p>
-            <p><strong>Overview:</strong> {selectedMovie.overview}</p>
-            <p><strong>Actors:</strong> {selectedMovie.actors.join(', ')}</p>
-            <p><strong>Genres:</strong> {selectedMovie.genres.join(', ')}</p>
-            <p><strong>Release:</strong> {selectedMovie.release}</p>
-            <p><strong>Rating:</strong> {selectedMovie.rating}</p>
-            <p><strong>Director:</strong> {selectedMovie.director}</p>
-            <p><strong>Duration:</strong> {selectedMovie.duration} mins</p>
-          </>
-        )}
-      </Modal>
+      {selectedMovie && (
+        <Modal
+          visible={true}
+          onCancel={handleCloseModal}
+          footer={null}
+          title={selectedMovie.title}
+        >
+          <img src={selectedMovie.poster} alt={selectedMovie.title} style={{ width: '100%' }} />
+          <p><Text strong>Director:</Text> {selectedMovie.director || 'N/A'}</p>
+          <p><Text strong>Release:</Text> {selectedMovie.release || 'N/A'}</p>
+          <p><Text strong>Rating:</Text> {selectedMovie.rating || 'N/A'}</p>
+          <p><Text strong>Duration:</Text> {selectedMovie.duration ? `${selectedMovie.duration} min` : 'N/A'}</p>
+          <p><Text strong>Actors:</Text> {selectedMovie.actors.length ? selectedMovie.actors.join(', ') : 'N/A'}</p>
+          <p><Text strong>Genres:</Text> {selectedMovie.genres.length ? selectedMovie.genres.join(', ') : 'N/A'}</p>
+          <Button
+            icon={<DeleteOutlined />}
+            onClick={() => { handleRemoveMovie(selectedMovie.id); handleCloseModal(); }}
+            type="primary"
+          >
+            Delete Movie
+          </Button>
+        </Modal>
+      )}
     </div>
   );
 }
