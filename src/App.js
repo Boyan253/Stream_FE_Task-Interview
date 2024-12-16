@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Card, Upload, List, message } from 'antd';
+import { Button, Upload, List, message, Space, Typography, Spin, Modal } from 'antd';
 import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
+import './TMDBMovieUploader.css'; 
 
-const TMDB_API_KEY = '4e87c8c0234c83f5b845585ead3f56a5' //#####this key is from the task itself#####
+const { Title, Text } = Typography;
+
+const TMDB_API_KEY = '4e87c8c0234c83f5b845585ead3f56a5';
 
 function TMDBMovieUploader() {
   const [fileContent, setFileContent] = useState([]);
   const [movieData, setMovieData] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   const handleFileUpload = (file) => {
     const reader = new FileReader();
@@ -76,6 +80,13 @@ function TMDBMovieUploader() {
     message.success('Movie removed successfully.');
   };
 
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMovie(null);
+  };
   const handleSaveData = async () => {
     if (!movieData.length) {
       message.warning('No movie data to save.');
@@ -97,19 +108,17 @@ function TMDBMovieUploader() {
       }
     }
   };
-  
-
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <h1>TMDB Movie Uploader</h1>
+    <div className="tmdb-uploader-container">
+      <Title level={2} style={{ textAlign: 'center' }}>TMDB Movie Uploader</Title>
       
       <Upload beforeUpload={handleFileUpload} showUploadList={false} accept=".txt">
-        <Button icon={<UploadOutlined />}>Upload .txt File</Button>
+        <Button icon={<UploadOutlined />} type="primary">Upload .txt File</Button>
       </Upload>
       
       {fileContent.length > 0 && (
         <>
-          <h2>Movie Titles</h2>
+          <Title level={3} style={{ marginTop: '20px' }}>Movie Titles</Title>
           <List
             bordered
             dataSource={fileContent}
@@ -120,31 +129,56 @@ function TMDBMovieUploader() {
             onClick={isSearching ? null : (movieData.length > 0 ? handleSaveData : fetchMovieData)} 
             loading={isSearching} 
             style={{ marginTop: '20px' }}
+            block
           >
             {isSearching ? 'Searching...' : movieData.length > 0 ? 'Save Data' : 'Search Movies'}
           </Button>
         </>
       )}
       
+      {isSearching && (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <Spin size="large" />
+        </div>
+      )}
+      
       {movieData.length > 0 && (
         <>
-          <h2>Movie Results</h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+          <Title level={3} style={{ marginTop: '20px' }}>Movie Library</Title>
+          <div className="movie-library">
             {movieData.map((movie) => (
-              <Card
-                key={movie.id}
-                hoverable
-                cover={movie.poster ? <img src={movie.poster} alt={movie.title} /> : null}
-                actions={[<DeleteOutlined key="delete" onClick={() => handleRemoveMovie(movie.id)} />]}
+              <div 
+                key={movie.id} 
+                className="movie-card" 
+                onClick={() => handleMovieClick(movie)}
               >
-                <Card.Meta title={movie.title} description={`Rating: ${movie.rating} / 10`} />
-                <p><strong>Director:</strong> {movie.director || 'N/A'}</p>
-                <p><strong>Release:</strong> {movie.release || 'N/A'}</p>
-                <p><strong>Genres:</strong> {movie.genres.length ? movie.genres.join(', ') : 'N/A'}</p>
-              </Card>
+                <img src={movie.poster} alt={movie.title} className="movie-poster" />
+                <Text strong className="movie-title">{movie.title}</Text>
+              </div>
             ))}
           </div>
         </>
+      )}
+      
+      {selectedMovie && (
+        <Modal 
+          visible={true} 
+          onCancel={handleCloseModal} 
+          footer={null} 
+          title={selectedMovie.title}
+        >
+          <img src={selectedMovie.poster} alt={selectedMovie.title} style={{ width: '100%' }} />
+          <p><Text strong>Director:</Text> {selectedMovie.director || 'N/A'}</p>
+          <p><Text strong>Release:</Text> {selectedMovie.release || 'N/A'}</p>
+          <p><Text strong>Genres:</Text> {selectedMovie.genres.length ? selectedMovie.genres.join(', ') : 'N/A'}</p>
+          <Button 
+            icon={<DeleteOutlined />} 
+            onClick={() => { handleRemoveMovie(selectedMovie.id); handleCloseModal(); }} 
+            type="primary"
+          >
+            Delete Movie
+          </Button>
+        </Modal>
       )}
     </div>
   );
