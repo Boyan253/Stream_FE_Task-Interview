@@ -1,12 +1,11 @@
 # This is an interview task for extracting movies from an API
 
-for test example create a .txt file with movie titles on your computer and upload it in the react app. Then you can remove unwanted movies and sent it to dummy backend, which is for the purpose of the task
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+for test example create a .txt file with movie titles on your computer and upload it in the react app. Then you can remove unwanted movies and sent it to dummy backend, which is for the purpose of the task, it is not supposed to run.
 ## Available Scripts
 
 In the project directory, you can run:
-
+### `npm install`
+then
 ### `npm start`
 
 Runs the app in the development mode.\
