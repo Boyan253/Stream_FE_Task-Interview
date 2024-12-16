@@ -168,12 +168,16 @@ function TMDBMovieUploader() {
           title={selectedMovie.title}
         >
           <img src={selectedMovie.poster} alt={selectedMovie.title} style={{ width: '100%' }} />
-          <p><Text strong>Director:</Text> {selectedMovie.director || 'N/A'}</p>
-          <p><Text strong>Release:</Text> {selectedMovie.release || 'N/A'}</p>
-          <p><Text strong>Rating:</Text> {selectedMovie.rating || 'N/A'}</p>
-          <p><Text strong>Duration:</Text> {selectedMovie.duration ? `${selectedMovie.duration} min` : 'N/A'}</p>
+          <p><Text strong>TMDB ID:</Text> {selectedMovie.id || 'N/A'}</p>
+          <p><Text strong>Title:</Text> {selectedMovie.title || 'N/A'}</p>
+          <p><Text strong>Overview:</Text> {selectedMovie.overview || 'N/A'}</p>
           <p><Text strong>Actors:</Text> {selectedMovie.actors.length ? selectedMovie.actors.join(', ') : 'N/A'}</p>
           <p><Text strong>Genres:</Text> {selectedMovie.genres.length ? selectedMovie.genres.join(', ') : 'N/A'}</p>
+          <p><Text strong>Release:</Text> {selectedMovie.release || 'N/A'}</p>
+          <p><Text strong>Rating:</Text> {selectedMovie.rating ? `${selectedMovie.rating} / 10` : 'N/A'}</p>
+          <p><Text strong>Trailer:</Text> {selectedMovie.trailer ? <a href={`https://www.youtube.com/watch?v=${selectedMovie.trailer}`} target="_blank" rel="noopener noreferrer">Watch Trailer</a> : 'N/A'}</p>
+          <p><Text strong>Director:</Text> {selectedMovie.director || 'N/A'}</p>
+          <p><Text strong>Duration (in minutes):</Text> {selectedMovie.duration ? `${selectedMovie.duration} min` : 'N/A'}</p>
           <Button
             icon={<DeleteOutlined />}
             onClick={() => { handleRemoveMovie(selectedMovie.id); handleCloseModal(); }}
